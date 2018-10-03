@@ -11,6 +11,10 @@ class Dado extends Model
     protected $fillable = [
         'chave','valor'
     ];
+
+    protected $hidden = [
+        'id', 'created_at','updated_at'
+    ];
     public function informacao()
     {
         return $this->belongsTo(Informacao::class,'informacoes_id');

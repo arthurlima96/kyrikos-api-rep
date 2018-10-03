@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use App\Informacao;
 use App\Dado;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class InformacaoController extends Controller
 {
     public function salvar(Request $req)
     {
-        $info = Informacao::create(['nome' => $req->nome]);
+        if(!$req->informacao)
+            return array('mensagem'=>'É necessário enviar os dados seguindo o exemplo: http://178.128.156.57/api/salvar?informacao=algo1;nome1;coisa1');
 
-        $dados = explode(';',$req->dados);
+        $info = Informacao::create(['nome' => 'Informacao '.Carbon::now()]);
+
+        $dados = explode(';',$req->informacao);
 
         $result = $this->separarDados($dados);
 
@@ -21,7 +25,7 @@ class InformacaoController extends Controller
             $info->dados()->save($dado);
         }
 
-        return $result[0];
+        return array('mensagem'=>'Os dados foram separados e salvos','informacao ID'=>$info->id,'separacao'=>$result);
     }
 
     private function separarDados ($dados)
